@@ -1,14 +1,30 @@
 # web-search
 
-A Clojure library designed to ... well, that part is up to you.
+When up and ran provides search api.
+
+Searches among forums and blogs by your text phrase.
+
+Powered by Yandex Search service.
+
+## Up and run
+
+clone the repo
+
+`lein run` to launch server instance
 
 ## Usage
 
-FIXME
+To get overall statistics of your phrase appearance.
+http://your-server.com:8080/search?query=jet&query=smap&plimit=1
 
-## License
+`query` - search phrase. `plimit` - limit max number parallel requests
 
-Copyright © 2017 FIXME
+Others api currently unavailable
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+## Suggested improvements
+
+- show actual links in foldable containers
+- make `plimit` optional
+
+## Fix
+- phrase search (spaces to pluses)
