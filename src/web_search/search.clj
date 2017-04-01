@@ -36,17 +36,16 @@
 
 ;; hardcoded amount of records per search
 (defn perform-get-links [text]
-  (let [complete-url (format url "text" 10)
+  (let [complete-url (format url text 10)
         resp (http/get complete-url)
         items (get-items (xml->clj (:body resp)))]
     (map get-link items)))
 
 
-;; do we need `doall` ?
 (defn parallel-domen-statistic [texts plimit]
   (let [bunched-texts (partition plimit texts)
         to-perform (comp frequencies (partial map get-2domen) perform-get-links)]
-    (->> (doall (map #(pmap to-perform %) bunched-texts))
+    (->> (map #(pmap to-perform %) bunched-texts)
          flatten
          (merge-with +)
          first)))

@@ -10,5 +10,6 @@
 
                  [ring "1.6.0-RC1"]
                  [compojure "1.5.2"]
-                 [clojurewerkz/urly "1.0.0"]]
+                 [clojurewerkz/urly "1.0.0"]
+                 [ring/ring-json "0.4.0"]]
   :main web-search.server)
