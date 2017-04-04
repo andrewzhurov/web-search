@@ -2,7 +2,8 @@
   (:require [clj-http.client :as http]
             [clojure.pprint :refer :all]
             [clojure.xml :as xml]
-            [clojurewerkz.urly.core :as url]))
+            [clojurewerkz.urly.core :as url]
+            [clojure.string :as str]))
 
 (def protocol "https://")
 (def hostname "blogs.yandex.ru/search.rss?")
@@ -36,7 +37,7 @@
 
 ;; hardcoded amount of records per search
 (defn perform-get-links [text]
-  (let [complete-url (format url text 10)
+  (let [complete-url (format url (str/replace text #" " "+") 10)
         resp (http/get complete-url)
         items (seek-items (xml->clj (:body resp)))]
     (map seek-link items)))
@@ -49,5 +50,4 @@
          distinct
          (map take-2domen)
          frequencies
-         (merge-with +)
          )))

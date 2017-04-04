@@ -7,7 +7,7 @@
 
 (defroutes routes
   (GET "/search" {{:strs [query plimit]} :query-params}
-       (let [results (doall (search/parallel-domen-statistic query plimit))
+       (let [results (doall (search/parallel-domen-statistic query (Integer. plimit)))
              pretty-html (->> (map (fn [[k v]] (format "<li>%s : %s</li>" k v)) results)
                               (reduce str)
                               )]
