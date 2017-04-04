@@ -14,7 +14,7 @@
   (xml/parse (java.io.ByteArrayInputStream. (.getBytes string))))
 
 ;; `some` part is bad, and the whole stuff messy 
-(defn get-items [xml-map]
+(defn seek-items [xml-map]
   (let [items (->> xml-map
                    :content
                    (some #(if (= :channel (:tag %)) % false))
@@ -23,14 +23,14 @@
                    )]
     items))
 
-(defn get-link [item]
+(defn seek-link [item]
   (->> item
        :content
        (some #(if (= :link (:tag %)) % false))
        :content
        first))
 
-(defn get-2domen [link]
+(defn take-2domen [link]
   (-> (url/url-like link)
       url/host-of))
 
@@ -38,14 +38,16 @@
 (defn perform-get-links [text]
   (let [complete-url (format url text 10)
         resp (http/get complete-url)
-        items (get-items (xml->clj (:body resp)))]
-    (map get-link items)))
+        items (seek-items (xml->clj (:body resp)))]
+    (map seek-link items)))
 
 
 (defn parallel-domen-statistic [texts plimit]
-  (let [bunched-texts (partition plimit texts)
-        to-perform (comp frequencies (partial map get-2domen) perform-get-links)]
-    (->> (map #(pmap to-perform %) bunched-texts)
+  (let [bunched-texts (partition plimit texts)]
+    (->> (map #(pmap perform-get-links %) bunched-texts)
          flatten
+         distinct
+         (map take-2domen)
+         frequencies
          (merge-with +)
-         first)))
+         )))
